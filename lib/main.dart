@@ -3,12 +3,18 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:aeyes_3/Screens/TakePictureScreen.dart';
+import 'package:aeyes_3/Screens/TakePictureScreenAPI.dart';
+import 'text_to_speech.dart'; // Make sure to import the TextToSpeech class
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Setting the environment variable for Google Cloud Credentials
+  Platform.environment['GOOGLE_APPLICATION_CREDENTIALS'] = 'rock-sorter-403218-c8e58de92b0d.json';
+
+  Platform.environment['REPLICATE_API_TOKEN'] = 'your_replicate_api_token_here';
 
   // Obtain a list of the available cameras on the device.
   final cameras = await availableCameras();
@@ -19,10 +25,15 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       theme: ThemeData.dark(),
-      home: TakePictureScreen(
-        // Pass the appropriate camera to the TakePictureScreen widget.
+      home: TakePictureScreenAPI( // Set TakePictureScreenAPI as the home widget
         camera: firstCamera,
+        speakFunction: speakText,
       ),
     ),
   );
+}
+
+Future<void> speakText(String text) async {
+  TextToSpeech tts = TextToSpeech('rock-sorter-403218-c8e58de92b0d.json');
+  await tts.speak(text);
 }
