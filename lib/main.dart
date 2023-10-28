@@ -3,8 +3,13 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:aeyes_3/Screens/TakePictureScreenAPI.dart';
 import 'text_to_speech.dart'; // Make sure to import the TextToSpeech class
+=======
+import 'package:aeyes_3/Screens/TakePictureScreen.dart';
+import 'package:aeyes_3/Screens/CameraScreen.dart';
+>>>>>>> 2cbc89ca1befac10c344ee552ed5e8ad2d39b83e
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -25,7 +30,11 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       theme: ThemeData.dark(),
+<<<<<<< HEAD
       home: TakePictureScreenAPI( // Set TakePictureScreenAPI as the home widget
+=======
+      home: CameraScreen(
+>>>>>>> 2cbc89ca1befac10c344ee552ed5e8ad2d39b83e
         camera: firstCamera,
         speakFunction: speakText,
       ),
