@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:aeyes_3/Screens/DisplayPictureScreen.dart';
 
 // A screen that allows users to take a picture using a given camera.
-class CameraScreen extends StatefulWidget {
-  const CameraScreen({
+class QuickScanScreen extends StatefulWidget {
+  const QuickScanScreen({
     super.key,
     required this.camera,
   });
@@ -14,10 +14,10 @@ class CameraScreen extends StatefulWidget {
   final CameraDescription camera;
 
   @override
-  CameraScreenState createState() => CameraScreenState();
+  QuickScanScreenState createState() => QuickScanScreenState();
 }
 
-class CameraScreenState extends State<CameraScreen> {
+class QuickScanScreenState extends State<QuickScanScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
 
@@ -47,7 +47,7 @@ class CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a picture')),
+      appBar: AppBar(title: const Text('Quick Scan')),
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.

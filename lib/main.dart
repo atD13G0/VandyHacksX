@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:aeyes_3/Screens/TakePictureScreen.dart';
-import 'package:aeyes_3/Screens/CameraScreen.dart';
+import 'package:aeyes_3/Screens/HomeScreen.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -19,10 +19,12 @@ Future<void> main() async {
 
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: CameraScreen(
-        camera: firstCamera,
-      ),
+      home: homeScreen(camera: firstCamera,),
+      // home: CameraScreen(
+      //   camera: firstCamera,
+      // ),
     ),
   );
 }
