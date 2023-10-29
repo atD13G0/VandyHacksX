@@ -90,19 +90,6 @@ class QuickScanScreenState extends State<QuickScanScreen> {
             final image = await _controller.takePicture();
 
             if (!mounted) return;
-
-            // If the picture was taken, display it on a new screen.
-            // await Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => DisplayPictureScreen(
-            //       // Pass the automatically generated path to
-            //       // the DisplayPictureScreen widget.
-            //       imagePath: image.path,
-            //     ),
-            //   ),
-            // );
-            print("hello world2");
-            print(image.runtimeType);
             await sendImageToApi(image);
           } catch (e) {
             // If an error occurs, log the error to the console.
@@ -116,40 +103,67 @@ class QuickScanScreenState extends State<QuickScanScreen> {
 }
 
 Future<void> sendImageToApi(XFile imagePath) async {
-    // File img = await savePngImageAsTemporaryFile(imagePath);
     Uint8List pngBytes = await convertXFileToPng(imagePath);
     print(pngBytes.runtimeType);
-
-    // Read the image file as bytes and convert it to a base64-encoded string
-    // List<int> imageBytes = await img.readAsBytes();
-    // String base64Img = base64Encode(imageBytes);
     String base64Img = base64Encode(pngBytes);
 
     final response = await http.post(
-        Uri.parse('https://api.replicate.com/v1/predictions'),
-        headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Token r8_2r3g1FhrBZgEIagYwq5UFUJdcKHGanG2MUSG2',
-        },
-        body: jsonEncode({
-        'version': '9109553e37d266369f2750e407ab95649c63eb8e13f13b1f3983ff0feb2f9ef7',
-        'input': {'image': base64Img},
-        }),
+      Uri.parse('https://api.replicate.com/v1/predictions'),
+      headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Token r8_BbVMkGSRAZWPnMwNA5vQaNuEmh5ZxTd0838JH',
+      },
+      body: jsonEncode({
+      'version': '9109553e37d266369f2750e407ab95649c63eb8e13f13b1f3983ff0feb2f9ef7',
+      'input': {'image': 'https://pbxt.replicate.delivery/IJEPJQ1Cx2l0TVdISAtGBATLGr0bn3sqZfOAY05QXepqDXd5/gg_bridge.jpeg'},
+      }),
     );
 
     print(response.statusCode);
 
-    // if (response.statusCode == 200) {
-    //     // Parse the response
-    //     Map<String, dynamic> responseData = jsonDecode(response.body);
-    //     String outputText = responseData['output']; // Adjust based on actual API response structure
+    if (response.statusCode == 201) {
+        // Parse the response
+        Map<String, dynamic> responseData = jsonDecode(response.body);
+        String outputText = responseData['id']; // Adjust based on actual API response structure
 
-    //     // Test image function
-    //     print("hello world3");
-    //     print(outputText);
-    // } else {
-    //     print('Failed to send image to API: ${response.statusCode}');
-    // }
+        // Test image function
+        print("hello world3");
+        print(outputText);
+        await Future.delayed(const Duration(seconds: 10), (){});
+        fetchReplicateData(outputText);
+    } else {
+        print('Failed to send image to API: ${response.statusCode}');
+    }
+  }
+
+  Future<void> fetchReplicateData(String id) async {
+    final String apiUrl = "https://api.replicate.com/v1/predictions/$id";
+    final String token = "r8_BbVMkGSRAZWPnMwNA5vQaNuEmh5ZxTd0838JH";
+    print(apiUrl);
+
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Token $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Parse the response
+      Map<String, dynamic> responseData = jsonDecode(response.body);
+      String status = responseData['status']; // Adjust based on actual API response structure
+      print(status);
+      if(status == "succeeded"){
+        print(responseData['output']);
+      } else if(status == "failed"){
+        print(responseData['logs']);
+      } else {
+        await Future.delayed(const Duration(seconds: 1), (){});
+        fetchReplicateData(id);
+      }
+    } else {
+      print('Failed to fetch data. Status code: ${response.statusCode}');
+    }
   }
 
   Future<Uint8List> convertXFileToPng(XFile xfile) async {
