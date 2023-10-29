@@ -1,16 +1,7 @@
-import 'dart:async';
-import 'dart:io';
-
+import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:aeyes_3/Screens/QuickScanScreen.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
-
-import 'package:aeyes_3/Screens/TakePictureScreenAPI.dart';
-// import 'text_to_speech.dart'; // Make sure to import the TextToSpeech class
-
-import 'package:aeyes_3/Screens/TakePictureScreen.dart';
-import 'package:aeyes_3/Screens/HomeScreen.dart';
-
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -27,9 +18,16 @@ Future<void> main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
+<<<<<<< HEAD
       home: homeScreen(
+=======
+      home:QuickScanScreen(
+>>>>>>> e12f8c9fb7a5ccfd7328ec64cedbf616f0589b49
         camera: firstCamera,
-        // speakFunction: speakText,
+        onResultReceived: (output) async {
+          FlutterTts flutterTts = FlutterTts();
+          await flutterTts.speak(output);
+        },
       ),
     ),
   );

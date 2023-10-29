@@ -16,11 +16,13 @@ import 'package:path_provider/path_provider.dart';
 // A screen that allows users to take a picture using a given camera.
 class QuickScanScreen extends StatefulWidget {
   const QuickScanScreen({
-    super.key,
+    Key? key,
     required this.camera,
-  });
+    required this.onResultReceived,
+  }) : super(key: key);
 
   final CameraDescription camera;
+  final Function(String) onResultReceived;
 
   @override
   QuickScanScreenState createState() => QuickScanScreenState();
@@ -72,24 +74,15 @@ class QuickScanScreenState extends State<QuickScanScreen> {
           }
         },
       ),
+      
       floatingActionButton: FloatingActionButton(
-        // Provide an onPressed callback.
         onPressed: () async {
-          print("hello world1");
-          // Take the Picture in a try / catch block. If anything goes wrong,
-          // catch the error.
           try {
-            // Ensure that the camera is initialized.
             await _initializeControllerFuture;
-
-            // Attempt to take a picture and get the file `image`
-            // where it was saved.
             final image = await _controller.takePicture();
-
             if (!mounted) return;
-            await sendImageToApi(image);
+            await sendImageToApi(image, widget.onResultReceived); // Passing the callback here
           } catch (e) {
-            // If an error occurs, log the error to the console.
             print(e);
           }
         },
@@ -99,41 +92,39 @@ class QuickScanScreenState extends State<QuickScanScreen> {
   }
 }
 
-Future<void> sendImageToApi(XFile imagePath) async {
-    Uint8List pngBytes = await convertXFileToPng(imagePath);
-    print(pngBytes.runtimeType);
-    String base64Img = base64Encode(pngBytes);
+Future<void> sendImageToApi(XFile imagePath, Function(String) onResultReceived) async {
+  Uint8List pngBytes = await convertXFileToPng(imagePath); // Assuming you have this function implemented
+  String base64Img = base64Encode(pngBytes);
 
-    final response = await http.post(
-      Uri.parse('https://api.replicate.com/v1/predictions'),
-      headers: {
+  final response = await http.post(
+    Uri.parse('https://api.replicate.com/v1/predictions'),
+    headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Token r8_BbVMkGSRAZWPnMwNA5vQaNuEmh5ZxTd0838JH',
-      },
-      body: jsonEncode({
-      'version': '9109553e37d266369f2750e407ab95649c63eb8e13f13b1f3983ff0feb2f9ef7',
-      'input': {'image': 'https://pbxt.replicate.delivery/IJEPJQ1Cx2l0TVdISAtGBATLGr0bn3sqZfOAY05QXepqDXd5/gg_bridge.jpeg'},
-      }),
-    );
+      'Authorization': 'Token your_token_here',
+    },
+    body: jsonEncode({
+      'version': 'your_version_here',
+      'input': {'image': 'your_image_url_here'},
+    }),
+  );
 
-    print(response.statusCode);
+  print(response.statusCode);
 
-    if (response.statusCode == 201) {
-        // Parse the response
-        Map<String, dynamic> responseData = jsonDecode(response.body);
-        String outputText = responseData['id']; // Adjust based on actual API response structure
+  if (response.statusCode == 201) {
+    Map<String, dynamic> responseData = jsonDecode(response.body);
+    String outputText = responseData['id']; 
 
-        // Test image function
-        print("hello world3");
-        print(outputText);
-        await Future.delayed(const Duration(seconds: 10), (){});
-        fetchReplicateData(outputText);
-    } else {
-        print('Failed to send image to API: ${response.statusCode}');
+    String? apiOutput = await fetchReplicateData(outputText); // Assuming you have this function implemented
+    if (apiOutput != null) {
+      onResultReceived(apiOutput); // Send the output to the callback function
     }
+  } else {
+    print('Failed to send image to API: ${response.statusCode}');
   }
+}
 
-  Future<void> fetchReplicateData(String id) async {
+
+  Future<String?> fetchReplicateData(String id) async {
     final String apiUrl = "https://api.replicate.com/v1/predictions/$id";
     final String token = "r8_BbVMkGSRAZWPnMwNA5vQaNuEmh5ZxTd0838JH";
     print(apiUrl);
@@ -155,7 +146,7 @@ Future<void> sendImageToApi(XFile imagePath) async {
       } else if(status == "failed"){
         print(responseData['logs']);
       } else {
-        await Future.delayed(const Duration(seconds: 5), (){});
+        await Future.delayed(const Duration(seconds: 1), (){});
         fetchReplicateData(id);
       }
     } else {
