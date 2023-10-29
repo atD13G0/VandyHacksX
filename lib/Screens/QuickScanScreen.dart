@@ -7,12 +7,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:aeyes_3/Screens/DisplayPictureScreen.dart';
 
-import 'package:flutter/rendering.dart';
-import 'dart:ui' as ui;
 import 'dart:typed_data';
 
 import 'package:image/image.dart' as img; // Import the image package.
-import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -158,7 +155,7 @@ Future<void> sendImageToApi(XFile imagePath) async {
       } else if(status == "failed"){
         print(responseData['logs']);
       } else {
-        await Future.delayed(const Duration(seconds: 1), (){});
+        await Future.delayed(const Duration(seconds: 5), (){});
         fetchReplicateData(id);
       }
     } else {

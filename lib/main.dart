@@ -27,7 +27,7 @@ Future<void> main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: QuickScanScreen(
+      home: homeScreen(
         camera: firstCamera,
         // speakFunction: speakText,
       ),
