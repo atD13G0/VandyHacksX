@@ -98,3 +98,22 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     );
   }
 }
+
+
+
+curl -s -H "Authorization: Token r8_2r3g1FhrBZgEIagYwq5UFUJdcKHGanG2MUSG2" \
+  "https://api.replicate.com/v1/predictions/j6t4en2gxjbnvnmxim7ylcyihu"
+
+
+
+curl -s -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"version": "9109553e37d266369f2750e407ab95649c63eb8e13f13b1f3983ff0feb2f9ef7", "input": {"image": "..."}}' \
+  -H "Authorization: Token r8_2r3g1FhrBZgEIagYwq5UFUJdcKHGanG2MUSG2" \
+  "https://api.replicate.com/v1/predictions"
+
+curl -s -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"version": "2e1dddc8621f72155f24cf2e0adbde548458d3cab9f00c0139eea840d0ac4746", "input": {"image": "..."}}' \
+  -H "Authorization: Token r8_2r3g1FhrBZgEIagYwq5UFUJdcKHGanG2MUSG2" \
+  "https://api.replicate.com/v1/predictions"

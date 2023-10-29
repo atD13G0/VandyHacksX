@@ -44,6 +44,9 @@ dependencies:
   path_provider: ^2.1.0
   path: ^1.8.2
 
+  # Add the flutter_tts package for text-to-speech functionality
+  flutter_tts: ^3.2.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
