@@ -7,8 +7,8 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
 
 
-class DeepScanScreen extends StatefulWidget {
-  const DeepScanScreen({
+class entire_run extends StatefulWidget {
+  const entire_run({
     super.key,
     required this.camera,
   });
@@ -16,12 +16,12 @@ class DeepScanScreen extends StatefulWidget {
   final CameraDescription camera;
 
   @override
-  _DeepScanScreenState createState() => _DeepScanScreenState();
+  _entire_runState createState() => _entire_runState();
 }
 
 enum TtsState { playing, stopped }
 
-class _DeepScanScreenState extends State<DeepScanScreen> {
+class _entire_runState extends State<entire_run> {
   //camera controllers
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
@@ -235,5 +235,6 @@ class _DeepScanScreenState extends State<DeepScanScreen> {
       print('Failed to fetch data. Status code: ${response.statusCode}');
     }
   }
+
 }
 

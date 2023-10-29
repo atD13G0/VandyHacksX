@@ -10,6 +10,7 @@ import 'package:aeyes_3/Screens/TakePictureScreenAPI.dart';
 
 import 'package:aeyes_3/Screens/TakePictureScreen.dart';
 import 'package:aeyes_3/Screens/HomeScreen.dart';
+import 'package:aeyes_3/Screens/entire_run.dart';
 
 
 Future<void> main() async {
@@ -29,7 +30,6 @@ Future<void> main() async {
       theme: ThemeData.dark(),
       home: homeScreen(
         camera: firstCamera,
-        // speakFunction: speakText,
       ),
     ),
   );
